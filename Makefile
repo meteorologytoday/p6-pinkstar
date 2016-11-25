@@ -1,10 +1,13 @@
 CC=gcc
 CFLAGS=-Wall
 MKDIR=mkdir -p
-SRCPATH=csrc p6src
+
+CSRCPATH=csrc
+P6SRCPATH=p6src
 CLIBPATH=clib
 P6LIBPATH=p6lib
 BINPATH=bin
+SRCPATH=$(CSRCPATH) $(P6SRCPATH)
 BUILD_DIRS=$(CLIBPATH) $(P6LIBPATH) $(BINPATH)
 
 VPATH=$(SRCPATH)
@@ -34,6 +37,9 @@ dirs: $(BUILD_DIRS)
 
 .PHONY: clean
 clean:
+
+	rm -rf $(P6SRCPATH)/.precomp
+
 	for dir in $(BUILD_DIRS); do \
 		rm -rf $$dir; \
 	done

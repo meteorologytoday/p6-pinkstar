@@ -9,3 +9,6 @@ Goal is to setup a C equivalent:
 	#include<sys/socket.h>
 	socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
 
+
+Current developement environment is CentOS 7.2
+
