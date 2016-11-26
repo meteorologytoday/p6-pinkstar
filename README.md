@@ -12,3 +12,4 @@ Goal is to setup a C equivalent:
 
 Current developement environment is CentOS 7.2
 
+Another goal is to make a Scapy equivalent.

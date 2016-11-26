@@ -19,13 +19,14 @@ class Field is export {
 
 }
 
-multi sub prefix:<~>(Field $f) {
+multi sub prefix:<~>(Field $f) is export {
 	"{$f.name} ({$f.size})";
 }
 
 class Structure is export {
 
 	has Field @.fields;
+	has $.payload is rw;
 
 
 	multi method new {
@@ -39,6 +40,8 @@ class Structure is export {
 		for @fields {
 			@!fields.push: Field.new($_[0], $_[1]);
 		}
+
+		$!payload = "";
 	}
 
 	method print-fields {
@@ -47,3 +50,25 @@ class Structure is export {
 		}
 	}
 }
+
+multi sub prefix:<~>(Structure $s) is export {
+	my str $l = "";
+	for $s.fields {
+		$l ~= ~$_ ~ "\n";
+	}
+	$l ~= "Payload: [" ~ ~$s.payload ~ "]";
+
+	$l;
+}
+
+
+proto infix:["<--"](Any $a, Any $b) {*}
+
+multi sub infix:["<--"](Structure $a, Structure $b) {
+	$a.payload = $b;
+}
+
+multi sub infix:["<--"](Structure $a, Str $b) is assoc<left> is export {
+	$a.payload = $b;
+}
+
