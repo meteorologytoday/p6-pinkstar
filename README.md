@@ -1,15 +1,10 @@
-# p6-sockraw-ipprotoraw
+# p6-pinkstar
 
-A perl6 socket package focus on SOCK_RAW and IPPROTO_RAW which enables one to create its own ip packet.
+A Scapy equivalent, experimental tool on perl6.
 
-PCAP would be considered.
 
-Goal is to setup a C equivalent:
-
-	#include<sys/socket.h>
-	socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-
+We use perl6 NativeCall coupled with kernel functions provided by C to manipulate the packet. PCAP would be considered in the future.
 
 Current developement environment is CentOS 7.2
 
-Another goal is to make a Scapy equivalent.
+
