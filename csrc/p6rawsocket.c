@@ -19,6 +19,11 @@ int p6_socket(int domain, int type, int protocol) {
 	return s;
 }
 
+ssize_t p6_send(int sockfd, const void *buf, size_t len, int flags) {
+	return send(sockfd, buf, len, flags);
+}
+
+
 int main(int argc, char **argv) {
 	p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
 	return 0;

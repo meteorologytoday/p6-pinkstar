@@ -26,6 +26,9 @@ socketwrapper: libp6rawsocket.so p6rawsocket.out
 print_const: print_const.out
 	$(BINPATH)/$< > $(P6LIBPATH)/SOCKET_CONSTANTS.pm
 
+.PHONY: ctypes
+ctypes: ctypes.out
+
 $(BUILD_DIRS):
 	$(MKDIR) $@
 
@@ -45,4 +48,4 @@ clean:
 	done
 
 .PHONY: all
-all: | dirs socketwrapper print_const 
+all: | dirs socketwrapper print_const ctypes 
