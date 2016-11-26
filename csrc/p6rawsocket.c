@@ -24,6 +24,12 @@ ssize_t p6_send(int sockfd, const void *buf, size_t len, int flags) {
 }
 
 
+void p6_setsockopt();
+void p6_htonl();
+void p6_ntohl();
+void p6_htons();
+void p6_ntohs();
+
 int main(int argc, char **argv) {
 	p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
 	return 0;
