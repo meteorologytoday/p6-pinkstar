@@ -24,7 +24,7 @@ lib%.so: %.c
 socketwrapper: libp6rawsocket.so p6rawsocket.out
 
 print_const: print_const.out
-	$(BINPATH)/$< > $(P6LIBPATH)/SOCKET_CONSTANTS.pm
+	$(BINPATH)/$< > $(P6LIBPATH)/SockConst.pm
 
 .PHONY: ctypes
 ctypes: ctypes.out

@@ -4,11 +4,7 @@
 #include<netinet/in.h>
 #include <unistd.h>
 #include <sys/types.h>
-
 #include "pinkstar_ctypes.h"
-
-
-
 
 P6INT32 p6_socket(P6INT32 domain, P6INT32 type, P6INT32 protocol) {
 	printf("init errno: [%d]\n", errno);
@@ -39,7 +35,31 @@ P6UINT16 p6_htons(P6UINT16 hostshort) { return htons(hostshort); }
 P6UINT16 p6_ntohs(P6UINT16 netshort)  { return ntohs(netshort); }
 
 int main(int argc, char **argv) {
-	p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
+	char msg[10];
+	int i;
+	for(i = 0; i < 10; ++i) { msg[i] = (char)((int)('a') + i); }
+	for(i = 0; i < 10; ++i) { printf("msg[%d] = %c\n", i, msg[i]); }
+
+	printf("Going to open socket...\n");
+	P6INT32 s = p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
+	int enable = 1;
+	if( setsockopt(s, IPPROTO_IP, IP_HDRINCL, &enable, sizeof(enable)) < 0 ) {
+		perror("setsockopt");
+	}
+	printf("Going to send msg...\n");
+
+	while(1) {
+		printf("Send msg...");
+		int result = p6_send(s, msg, 10, 0);
+		printf("done\n");
+
+		if(result == -1) {
+			perror("Error while sending msg.");
+			break;
+		}
+	}
+
+	printf("Exiting program...\n");
 	return 0;
 }
 

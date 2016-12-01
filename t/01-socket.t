@@ -5,7 +5,7 @@ use lib 'p6src';
 use lib 'p6lib';
 
 use RawSocket;
-use SocketConst;
+use SockConst;
 
 plan 1;
 
