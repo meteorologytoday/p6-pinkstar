@@ -11,10 +11,11 @@ void printsize(char *typename, size_t size) {
 
 int main() {
 
-	printsize("size_t",  SZ(size_t));
-	printsize("ssize_t", SZ(ssize_t));
-	printsize("int", SZ(int));
-	printsize("short", SZ(short));
+	printsize("size_t",     SZ(size_t));
+	printsize("ssize_t",    SZ(ssize_t));
+	printsize("int",        SZ(int));
+	printsize("short",      SZ(short));
+	printsize("socklen_t",  SZ(socklen_t));
 
 	return 0;
 }

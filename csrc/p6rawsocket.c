@@ -5,7 +5,12 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-int p6_socket(int domain, int type, int protocol) {
+#include "pinkstar_ctypes.h"
+
+
+
+
+P6INT32 p6_socket(P6INT32 domain, P6INT32 type, P6INT32 protocol) {
 	printf("init errno: [%d]\n", errno);
 	char cwd[1024];
 	getcwd(cwd, sizeof(cwd));
@@ -19,16 +24,19 @@ int p6_socket(int domain, int type, int protocol) {
 	return s;
 }
 
-ssize_t p6_send(int sockfd, const void *buf, size_t len, int flags) {
+P6SSIZE_T p6_send(P6INT32 sockfd, P6PTR buf, P6SIZE_T len, P6INT32 flags) {
 	return send(sockfd, buf, len, flags);
 }
 
 
-void p6_setsockopt();
-void p6_htonl();
-void p6_ntohl();
-void p6_htons();
-void p6_ntohs();
+P6INT32 p6_setsockopt(P6INT32 sockfd, P6INT32 level, P6INT32 optname, P6PTR optval, P6SOCKLEN_T optlen) {
+	return setsockopt(sockfd, level, optname, optval, optlen);
+}
+
+P6UINT32 p6_htonl(P6UINT32 hostlong)  { return htonl(hostlong);  }
+P6UINT32 p6_ntohl(P6UINT32 netlong)   { return htonl(netlong);   }
+P6UINT16 p6_htons(P6UINT16 hostshort) { return htons(hostshort); }
+P6UINT16 p6_ntohs(P6UINT16 netshort)  { return ntohs(netshort); }
 
 int main(int argc, char **argv) {
 	p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
