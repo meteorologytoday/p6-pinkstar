@@ -35,7 +35,7 @@ class iphdr is repr('CStruct') is export {
 
 sub cbyteorder() returns uint32 is native(libpath) is symbol('p6_cbyteorder') is export { ... }
 sub send(int32, int32, int32) returns size_t is native(libpath) is symbol('p6_send') is export { ... }
-sub send2(iphdr, Str) is native(libpath) is symbol('p6_send2') is export { ... }
+sub send2(iphdr, CArray[uint8], uint32) is native(libpath) is symbol('p6_send2') is export { ... }
 sub socket(int32, int32, int32) returns int32 is native(libpath) is symbol('p6_socket') is export { ... }
 
 

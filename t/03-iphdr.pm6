@@ -18,4 +18,12 @@ $iphdr.protocol = 33;
 
 say cbyteorder;
 
-send2($iphdr, "test");
+my $word = CArray[uint8].new;
+
+$word[0] = 56;
+$word[1] = 70;
+$word[2] = 71;
+$word[3] = 55;
+
+
+send2($iphdr, $word, 4);

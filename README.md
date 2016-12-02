@@ -8,3 +8,15 @@ We use perl6 NativeCall coupled with kernel functions provided by C to manipulat
 Current developement environment is CentOS 7.2
 
 
+
+
+# TODO
+
+## Low-level side
+
+- Write send function for ip packet.
+- Write recive functions for packet sniffing.
+
+## High-level side
+
+- Write heirachical OSI-model like classes.

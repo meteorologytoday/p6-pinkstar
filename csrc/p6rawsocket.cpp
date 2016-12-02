@@ -51,8 +51,11 @@ P6INT32 p6_socket_inet4() {
 	return s;
 }
 
-void p6_send2(struct iphdr &hdr, char *str) {
-	printf("[%s]\n", str);
+void p6_send2(struct iphdr &hdr, P6CHAR *c, P6UINT32 c_len) {
+	for(P6UINT32 i=0; i < c_len; ++i ) {
+		printf("[%c]", c[i]);
+	}
+	printf("\n");
 }
 
 
