@@ -1,10 +1,61 @@
 #include<errno.h>
 #include<stdio.h>
+#include<stdlib.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <asm/byteorder.h>
 #include "pinkstar_ctypes.h"
+
+
+extern "C" { // prevent from c++ name mangling
+
+typedef struct iphdr p6_iphdr;
+/*
+struct p6_iphdr {
+	P6UINT32 version;
+  	P6UINT32 ihl;
+	P6UINT32 tos;
+	P6UINT32 tot_len;
+	P6UINT32 id;
+	P6UINT32 frag_off;
+	P6UINT32 ttl;
+	P6UINT32 protocol;
+	P6UINT32 check;
+	P6UINT32 saddr;
+	P6UINT32 daddr;
+};
+*/
+
+P6INT32 p6_cbyteorder() {
+
+#if defined(__LITTLE_ENDIAN_BITFIELD)
+	return 0;
+#elif defined (__BIG_ENDIAN_BITFIELD)
+	return 1;
+#else
+#error	"Please fix <asm/byteorder.h>"
+#endif
+
+}
+
+
+P6INT32 p6_socket_inet4() {
+	P6INT32 s = socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
+
+	if(s == -1) {
+		perror("function socket");
+	}
+
+	return s;
+}
+
+void p6_send2(struct iphdr &hdr, char *str) {
+	printf("[%s]\n", str);
+}
+
+
 
 P6INT32 p6_socket(P6INT32 domain, P6INT32 type, P6INT32 protocol) {
 	printf("init errno: [%d]\n", errno);
@@ -42,6 +93,17 @@ int main(int argc, char **argv) {
 
 	printf("Going to open socket...\n");
 	P6INT32 s = p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
+
+
+	
+
+
+
+
+
+
+
+
 	int enable = 1;
 	if( setsockopt(s, IPPROTO_IP, IP_HDRINCL, &enable, sizeof(enable)) < 0 ) {
 		perror("setsockopt");
@@ -97,4 +159,4 @@ unsigned short p6_csum(unsigned short *ptr,int nbytes) {
      
     return(answer);
 }
-
+}

@@ -1,0 +1,5 @@
+g++ -Wall -shared -fPIC -o clib/libp6rawsocket.so csrc/p6rawsocket.c
+g++ -Wall -o bin/p6rawsocket.out csrc/p6rawsocket.c
+g++ -Wall -o bin/print_const.out csrc/print_const.c
+bin/print_const.out > p6lib/SockConst.pm
+g++ -Wall -o bin/ctypes.out csrc/ctypes.c

@@ -4,8 +4,8 @@
 
 #define SZ(type) sizeof(type)
 
-void printsize(char *typename, size_t size) {
-	printf("%s=%d\n", typename, size);
+void printsize(char * tpname, size_t size) {
+	printf("%s=%d\n", tpname, size);
 }
 
 

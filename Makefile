@@ -1,5 +1,7 @@
 CC=gcc
+CPP=g++
 CFLAGS=-Wall
+CPPFLAGS=-Wall
 MKDIR=mkdir -p
 
 CSRCPATH=csrc
@@ -18,8 +20,15 @@ VPATH=$(SRCPATH)
 lib%.so: %.c
 	$(CC) $(CFLAGS) -shared -fPIC -o $(CLIBPATH)/$@ $<
 
+lib%.so: %.cpp
+	$(CPP) $(CPPFLAGS) -shared -fPIC -o $(CLIBPATH)/$@ $<
+
 %.out: %.c
 	$(CC) $(CFLAGS) -o $(BINPATH)/$@ $<
+
+%.out: %.cpp
+	$(CPP) $(CPPFLAGS) -o $(BINPATH)/$@ $<
+
 
 socketwrapper: libp6rawsocket.so p6rawsocket.out
 
