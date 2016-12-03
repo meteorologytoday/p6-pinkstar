@@ -5,29 +5,14 @@ use BaseClass;
 unit module Layers;
 
 class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
+	my @.init_fields = <Version ihl dscp ecn tot_len id flag frag ttl protocol checksum s_addr d_addr opt>;
 
 	multi method new {
 		self.bless;
 	}
 
 	submethod BUILD {
-
-		self.initField(
-			("Version", 4), 
-			("IHL", 4), 
-			("DSCP", 6), 
-			("ECN", 2), 
-			("TotalLength", 16), 
-			("Identification", 8), 
-			("Flags", 3), 
-			("FragmentOffset", 13), 
-			("ttl", 8), 
-			("Protocol", 8), 
-			("Checksum", 16), 
-			("SourceIP", 32), 
-			("DestinationIP", 32),
-			("Options", -1)
-		);
+		self.initField(inet4.init_fields);
 	}
 
 	method serialize {

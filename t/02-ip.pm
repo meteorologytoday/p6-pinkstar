@@ -13,8 +13,6 @@ plan 1;
 my $packet =  Layers::inet4.new;
 my $packet2 =  Layers::inet4.new;
 
-$packet.print-fields;
-
 # Test opeartor &infix:["<--"]
 $packet <-- $packet2 <-- "This is message!";
 
