@@ -42,7 +42,7 @@ P6INT32 p6_cbyteorder() {
 
 
 P6INT32 p6_socket_inet4() {
-	P6INT32 s = socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
+	P6INT32 s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
 
 	if(s == -1) {
 		perror("function socket");
@@ -89,6 +89,16 @@ P6UINT16 p6_htons(P6UINT16 hostshort) { return htons(hostshort); }
 P6UINT16 p6_ntohs(P6UINT16 netshort)  { return ntohs(netshort); }
 
 int main(int argc, char **argv) {
+
+	errno = 0;
+	int s = socket(AF_INET, SOCK_DGRAM, IPPROTO_TCP);
+	if(s == -1) {
+		perror("socket");
+	}
+
+	return 0;
+
+/*
 	char msg[10];
 	int i;
 	for(i = 0; i < 10; ++i) { msg[i] = (char)((int)('a') + i); }
@@ -96,16 +106,6 @@ int main(int argc, char **argv) {
 
 	printf("Going to open socket...\n");
 	P6INT32 s = p6_socket(PF_INET, SOCK_RAW, IPPROTO_RAW);
-
-
-	
-
-
-
-
-
-
-
 
 	int enable = 1;
 	if( setsockopt(s, IPPROTO_IP, IP_HDRINCL, &enable, sizeof(enable)) < 0 ) {
@@ -126,6 +126,7 @@ int main(int argc, char **argv) {
 
 	printf("Exiting program...\n");
 	return 0;
+*/
 }
 
 

@@ -4,7 +4,7 @@ use BaseClass;
 
 unit module Layers;
 
-class inet4 is BaseClass::Structure is export {
+class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 
 	multi method new {
 		self.bless;
@@ -28,6 +28,10 @@ class inet4 is BaseClass::Structure is export {
 			("DestinationIP", 32),
 			("Options", -1)
 		);
+	}
+
+	method serialize {
+
 	}
 
 }

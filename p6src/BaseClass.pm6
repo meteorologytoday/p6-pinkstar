@@ -2,6 +2,11 @@ use v6;
 
 unit module BaseClass;
 
+role Serializable {
+	method serialize() returns buf8:D { ... }
+}
+
+
 class Field is export {
 
 	has Str $.name;
