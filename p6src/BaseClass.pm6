@@ -1,9 +1,26 @@
 use v6;
-
+use experimental :pack;
 unit module BaseClass;
 
 role Serializable {
-	method serialize() returns buf8:D { ... }
+
+	method serialize() returns Positional:D { ... }
+	method print-serialized(:$grouping = 32) {
+		my @buf := self.serialize;
+		my $i = 0;
+
+		for @buf {
+			print $_.fmt("%x");
+			if ++$i >= $grouping {
+				print "\n";
+				$i -= $grouping;
+			} else {
+				print " ";
+			}
+		}
+
+		print "\n";
+	}
 }
 
 role Structure is export {

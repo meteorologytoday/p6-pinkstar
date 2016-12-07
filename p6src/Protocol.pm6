@@ -1,9 +1,9 @@
 use v6;
 
 use BaseClass;
-use Struct;
+use NetPacker8;
 
-unit module Layers;
+unit module Protocol;
 
 class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 	my @.init_fields = <Version ihl dscp ecn tot_len id flag frag ttl protocol checksum s_addr d_addr opt>;
@@ -16,11 +16,10 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 		self.initField(inet4.init_fields);
 	}
 
-	method serialize returns buf8 {
-		my $buf = buf8.new;
-		my $p = NetPacker8.new(:$buf);
+	method serialize returns Array {
+		my @p := NetPacker8.new;
 		
-		$p
+		@p
 			.write-x8(4, self.fields<Version>, self.fields<ihl>)
 			.write-x8(6, self.fields<dscp>, self.fields<ecn>)
 			.write16(self.fields<tot_len>)
@@ -31,7 +30,9 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 			.write16(self.fields<checksum>)
 			.write32(self.fields<s_addr>)
 			.write32(self.fields<d_addr>);
-		$buf;
+
+#		say "WHERE: {@p.WHERE}, size: {@p.elems}, pos: {@p.pos}";
+		@p;
 	}
 
 }

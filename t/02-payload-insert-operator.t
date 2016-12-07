@@ -5,7 +5,7 @@ use lib 'p6src';
 use lib 'p6lib';
 
 use BaseClass;
-use Layers;
+use inet4;
 
 
 plan 1;
