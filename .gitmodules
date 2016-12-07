@@ -1,3 +1,0 @@
-[submodule "ext_module/PackUnpack"]
-	path = ext_module/PackUnpack
-	url = git://github.com/lizmat/PackUnpack.git
