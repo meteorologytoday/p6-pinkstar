@@ -18,3 +18,7 @@ $packet <-- $packet2 <-- "This is message!";
 
 say "\n===\nStringify packet";
 say ~$packet;
+
+for $packet.serialize {
+	say "[$_]";
+}

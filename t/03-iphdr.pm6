@@ -1,9 +1,6 @@
 use v6;
 use Test;
 
-use lib 'p6src';
-use lib 'p6lib';
-
 use NativeCall;
 use RawSocket;
 use SockConst;
@@ -24,6 +21,7 @@ $word[0] = 56;
 $word[1] = 70;
 $word[2] = 71;
 $word[3] = 55;
+send2($iphdr, $bufw, 4);
 
 
-send2($iphdr, $word, 4);
+say "New Test";
