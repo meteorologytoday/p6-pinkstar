@@ -31,6 +31,12 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 			.write-payload(self.payload);
 	}
 
+	method cal-checksum {
+	}
+
+	method emit {
+		
+	}
 }
 
 

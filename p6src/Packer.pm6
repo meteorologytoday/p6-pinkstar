@@ -1,3 +1,15 @@
+=begin info
+
+Module: Packer
+Author: Hsu, Tien-Yiao
+Modified Date: 2016-12-09
+Description:
+
+Module Packer provides NetPacker8 (Net-endianess, 8 bits per element)
+with methods to input data without worry about endianess.
+
+=end info
+
 use v6;
 
 use BaseClass;
