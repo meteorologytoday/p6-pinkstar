@@ -2,7 +2,7 @@ use v6;
 use experimental :pack;
 unit module BaseClass;
 
-role Serializable {
+role Serializable is export {
 
 	method serialize() returns Positional:D { ... }
 	method print-serialized(:$grouping = 32) {
@@ -35,6 +35,12 @@ role Structure is export {
 
 		$!payload = "";
 	}
+
+	method set-fields(*%h) {
+		for %h.kv -> $k, $v {
+			%!fields{$k} = $v;
+		}
+	}
 }
 
 multi sub prefix:<~>(Structure $s) is export {
@@ -48,13 +54,18 @@ multi sub prefix:<~>(Structure $s) is export {
 }
 
 
-proto infix:["<--"](Any $a, Any $b) {*}
+proto infix:["<--"](Any $a, Any $b) is export {*}
 
-multi sub infix:["<--"](Structure $a, Structure $b) {
+multi sub infix:["<--"](Structure $a, Structure $b) is export {
 	$a.payload = $b;
 }
 
 multi sub infix:["<--"](Structure $a, Str $b) is assoc<left> is export {
 	$a.payload = $b;
 }
+
+#multi sub postcircumfix:<{ }>(Structure $a, $key) is rw is export {
+#	$a.fields{$key};
+#}
+
 

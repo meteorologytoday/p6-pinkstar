@@ -46,6 +46,8 @@ class icmp is BaseClass::Structure does BaseClass::Serializable is export {
 	}
 
 	method serialize returns Array {
+		self.cal-checksum;
+
 		NetPacker8.new
 			.write8(self.fields<type>)
 			.write8(self.fields<code>)
@@ -53,4 +55,13 @@ class icmp is BaseClass::Structure does BaseClass::Serializable is export {
 			.write32(self.fields<rest>)
 			.write-payload(self.payload);
 	}
+
+	method cal-checksum {
+		self.fields<checksum> = 
+		    ( ( self.fields<type> +< 8 ) 
+		    + ( self.fields<code> +& 0xFF )
+		    + ((self.fields<rest> +> 16 ) )
+		    +   self.fields<rest> ) +& 0xFFFF;
+	}
+
 }
