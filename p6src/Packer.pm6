@@ -50,33 +50,21 @@ class NetPacker8 is Array is export {
 	}
 
 	multi method write-payload(BaseClass::Serializable $a) returns NetPacker8 {
-		say "write-payload serializable";
-		my @p := $a.serialize; say @p.isa(Array);
-		say "[[" ~@p ~ "]]";
-		say @p.isa(Str);
-		self.write-payload(@p);
-		self;
+		self.write-payload($a.serialize);
 	}
 
-	multi method write-payload(Any $a) returns NetPacker8 {
-		say "### write-payload Array ###";
-		say "[[" ~$a ~ "]]";
-		for $a {
+	multi method write-payload(@a) returns NetPacker8 {
+		for @a {
 			self[$!pos++] = $_ +& 0xFF;
 		}
-		say "Here...";
 		self;
 	}
 
-=begin comment
 	multi method write-payload(Str $s, :$encoding = 'ascii') returns NetPacker8 {
-		say "write-payload str";
-		say "[[$s]]";
 		for $s.encode(:$encoding) {
 			self[$!pos++] = $_ +& 0xFF;
 		}
 
 		self;
 	}
-=end comment
 }

@@ -14,4 +14,4 @@ my $packet = Protocol::inet4.new;
 
 $packet <-- "Pink stars are falling in line...";
 
-$packet.print-serialized :grouping(16);
+$packet.print-serialized :grouping(32);

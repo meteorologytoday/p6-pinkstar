@@ -1,7 +1,7 @@
 use v6;
 
 use BaseClass;
-use NetPacker8;
+use Packer;
 
 unit module Protocol;
 
@@ -17,9 +17,7 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 	}
 
 	method serialize returns Array {
-		my @p := NetPacker8.new;
-		
-		@p
+		NetPacker8.new
 			.write-x8(4, self.fields<Version>, self.fields<ihl>)
 			.write-x8(6, self.fields<dscp>, self.fields<ecn>)
 			.write16(self.fields<tot_len>)
@@ -29,10 +27,30 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 			.write8(self.fields<protocol>)
 			.write16(self.fields<checksum>)
 			.write32(self.fields<s_addr>)
-			.write32(self.fields<d_addr>);
-
-#		say "WHERE: {@p.WHERE}, size: {@p.elems}, pos: {@p.pos}";
-		@p;
+			.write32(self.fields<d_addr>)
+			.write-payload(self.payload);
 	}
 
+}
+
+
+class icmp is BaseClass::Structure does BaseClass::Serializable is export {
+	my @.init_fields = <type code checksum rest>;
+
+	multi method new {
+		self.bless;
+	}	
+
+	submethod BUILD {
+		self.initField(icmp.init_fields);
+	}
+
+	method serialize returns Array {
+		NetPacker8.new
+			.write8(self.fields<type>)
+			.write8(self.fields<code>)
+			.write16(self.fields<checksum>)
+			.write32(self.fields<rest>)
+			.write-payload(self.payload);
+	}
 }

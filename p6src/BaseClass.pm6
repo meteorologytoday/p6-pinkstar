@@ -10,7 +10,7 @@ role Serializable {
 		my $i = 0;
 
 		for @buf {
-			print $_.fmt("%x");
+			print $_.fmt("%02x");
 			if ++$i >= $grouping {
 				print "\n";
 				$i -= $grouping;
@@ -38,7 +38,7 @@ role Structure is export {
 }
 
 multi sub prefix:<~>(Structure $s) is export {
-	my str $l = "";
+	my Str $l = "";
 	for $s.fields {
 		$l ~= ~$_ ~ "\n";
 	}
