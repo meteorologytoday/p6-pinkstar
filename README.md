@@ -16,7 +16,7 @@ Current developement environment is CentOS 7.2
 	make clean      # remove files
 
 ## Environment variable
-	. setup.sh      # must use "." to ensure variable P6LIBPATH is exported
+	. setup.sh      # must use "." to ensure variable PERL6LIB is exported
 
 
 

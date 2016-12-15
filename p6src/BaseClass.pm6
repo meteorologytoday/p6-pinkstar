@@ -28,9 +28,10 @@ role Structure is export {
 	has %.fields;
 	has $.payload is rw;
 
-	method initField (@fields) { # prevent flattening
+	method initField (@fields) {
 		for @fields {
-			%!fields{$_} = -1;
+			%!fields{$_.key} = $_.value;
+#			say "{$_.key}\t=>\t{$_.value}";
 		}
 
 		$!payload = "";

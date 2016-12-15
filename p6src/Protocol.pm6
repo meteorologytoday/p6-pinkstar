@@ -1,12 +1,30 @@
 use v6;
 
+use RawSocket;
+use SockConst;
 use BaseClass;
 use Packer;
-
+use NativeCall;
 unit module Protocol;
 
 class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
-	my @.init_fields = <Version ihl dscp ecn tot_len id flag frag ttl protocol checksum s_addr d_addr opt>;
+	my @.init_fields = {
+		:version(0),
+		:ihl(0),
+		:dscp(0),
+		:ecn(0),
+		:tot_len(0),
+		:id(0),
+		:flag(0),
+		:ttl(16),
+		:protocol(0),
+		:checksum(0),
+		:s_addr(0),
+		:d_addr(0),
+		:opt(0)
+	};
+
+	has int $!opt-len = 0;
 
 	multi method new {
 		self.bless;
@@ -17,8 +35,9 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 	}
 
 	method serialize returns Array {
+		say ~self.fields;
 		NetPacker8.new
-			.write-x8(4, self.fields<Version>, self.fields<ihl>)
+			.write-x8(4, self.fields<version>, self.fields<ihl>)
 			.write-x8(6, self.fields<dscp>, self.fields<ecn>)
 			.write16(self.fields<tot_len>)
 			.write16(self.fields<id>)
@@ -32,16 +51,46 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 	}
 
 	method cal-checksum {
+		
+	}
+
+	method wrap-up(*%h) {
+
+		self.fields<tot_len> = 128 + $!opt-len;
+		
+		# TODO
+		# self.fields<checksum> = self.cal-checksum;
+		
+		
+
 	}
 
 	method emit {
+
+		self.wrap-up;
+
+		my $data = self.serialize.get-CArray;
+		my $header = RawSocket::iphdr.new;
+
+		$header.clone-fields(self.fields);
+
+		my int $sd = socket(SockConst::Domain.AF_INET, SockConst::Type.SOCK_RAW, SockConst::Protocol.IPPROTO_RAW);
+
+
+		my $result = send_inet4($sd, $header, $data, $data.elems, 1);
+		say "Result: $result";
 		
 	}
 }
 
 
 class icmp is BaseClass::Structure does BaseClass::Serializable is export {
-	my @.init_fields = <type code checksum rest>;
+	my @.init_fields = {
+		:type(0),
+		:code(0),
+		:checksum(0),
+		:rest(0)
+	};
 
 	multi method new {
 		self.bless;

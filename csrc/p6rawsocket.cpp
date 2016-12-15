@@ -7,11 +7,14 @@
 #include <sys/types.h>
 #include <asm/byteorder.h>
 #include "pinkstar_ctypes.h"
+#include<netinet/ip.h>    //Provides declarations for ip header
+
+/* Info about sock_raw please refer to : man 7 RAW */
 
 
 extern "C" { // prevent from c++ name mangling
 
-typedef struct iphdr p6_iphdr;
+//typedef struct iphdr p6_iphdr;
 /*
 struct p6_iphdr {
 	P6UINT32 version;
@@ -28,6 +31,10 @@ struct p6_iphdr {
 };
 */
 
+struct iphdr& p6_allocate_iphdr() {
+	return *( (struct iphdr*) malloc(sizeof(struct iphdr)) );
+}
+
 P6INT32 p6_cbyteorder() {
 
 #if defined(__LITTLE_ENDIAN_BITFIELD)
@@ -40,23 +47,52 @@ P6INT32 p6_cbyteorder() {
 
 }
 
-
-P6INT32 p6_socket_inet4() {
-	P6INT32 s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-
-	if(s == -1) {
-		perror("function socket");
-	}
-
-	return s;
+void p6_setup_header_inet4(struct iphdr &hdr) {
+	
 }
 
-void p6_send2(struct iphdr &hdr, P6CHAR *c, P6UINT32 c_len) {
-	for(P6UINT32 i=0; i < c_len; ++i ) {
-		printf("[%c]", c[i]);
+
+P6INT32 p6_send_inet4(P6INT32 sd, struct iphdr &hdr, P6CHAR *data, P6UINT32 c_len) {
+
+	struct sockaddr_in d_sin;
+	d_sin.sin_family = AF_INET;
+	d_sin.sin_port = 0;
+	d_sin.sin_addr.s_addr = hdr.daddr;
+
+	printf("hdr.tot_len = %d\n", hdr.tot_len);
+
+	errno = 0;
+	if(sendto(sd, data, hdr.tot_len, 0, (struct sockaddr *) &d_sin, sizeof(d_sin)) < 0) {
+		perror("sendto\n");
+	} else {
+		printf("Packet sent. Length: %d bytes.\n", hdr.tot_len);
+	}
+
+	return sd;
+}
+
+P6INT32 p6_send_test(P6INT32 sd, struct iphdr &hdr, P6CHAR *data, P6UINT32 c_len) {
+	printf("send_test\n");
+
+	struct sockaddr_in d_sin;
+	d_sin.sin_family = AF_INET;
+	d_sin.sin_port = 0;
+	d_sin.sin_addr.s_addr = 1;
+
+	printf("C size of header: %d\n", sizeof(hdr));
+	for(int i=0; i < sizeof(hdr) ; ++i) {
+		printf("%c - ", *((char *) (&hdr + i)) );
 	}
 	printf("\n");
+
+	errno = 0;
+	printf("This is a test\n");
+
+
+	return sd;
 }
+
+
 
 
 
@@ -72,6 +108,10 @@ P6INT32 p6_socket(P6INT32 domain, P6INT32 type, P6INT32 protocol) {
 	printf("errno: [%d], s = %d\n", errno, s);
 	perror("Open socket");
 	return s;
+}
+
+P6INT32 p6_close(P6INT32 fd) {
+	return close(fd);
 }
 
 P6SSIZE_T p6_send(P6INT32 sockfd, P6PTR buf, P6SIZE_T len, P6INT32 flags) {

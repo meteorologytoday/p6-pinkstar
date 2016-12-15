@@ -20,7 +20,7 @@ void module(char *m) {
 
 int main(int argc, char **argv) {
 
-	module("SOCKET_CONSTANTS");
+	module("SockConst");
 
 	class_head("Domain");
 	def("AF_INET", AF_INET);

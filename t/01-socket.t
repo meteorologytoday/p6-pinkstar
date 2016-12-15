@@ -9,7 +9,7 @@ use SockConst;
 
 plan 1;
 
-my $s = socket(2,3,255);
+my $s = socket(SockConst::Domain.AF_INET, SockConst::Type.SOCK_RAW, SockConst::Protocol.IPPROTO_RAW);
 
 isnt $s, -1, "Socket number is -1 on failure.";
 

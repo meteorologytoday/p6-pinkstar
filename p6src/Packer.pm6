@@ -13,6 +13,7 @@ with methods to input data without worry about endianess.
 use v6;
 
 use BaseClass;
+use NativeCall;
 
 unit module Packer;
 
@@ -78,5 +79,14 @@ class NetPacker8 is Array is export {
 		}
 
 		self;
+	}
+
+	method get-CArray returns CArray[uint32] {
+		my @arr := CArray[uint32].new;
+		for 0..(self.elems - 1) {
+			@arr[$_] = self[$_];
+		}
+		
+		@arr;
 	}
 }
