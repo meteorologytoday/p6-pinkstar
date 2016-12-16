@@ -1,5 +1,4 @@
 use v6;
-use experimental :pack;
 unit module BaseClass;
 
 role Serializable is export {
@@ -31,7 +30,7 @@ role Structure is export {
 	method initField (@fields) {
 		for @fields {
 			%!fields{$_.key} = $_.value;
-#			say "{$_.key}\t=>\t{$_.value}";
+			#say "{$_.key}\t=>\t{$_.value}";
 		}
 
 		$!payload = "";

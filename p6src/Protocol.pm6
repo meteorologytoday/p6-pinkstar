@@ -16,6 +16,7 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 		:tot_len(0),
 		:id(0),
 		:flag(0),
+		:frag(0),
 		:ttl(16),
 		:protocol(0),
 		:checksum(0),
@@ -56,8 +57,10 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 
 	method wrap-up(*%h) {
 
-		self.fields<tot_len> = 128 + $!opt-len;
-		
+		self.fields<version> = 4;
+		self.fields<ihl> = 5 + $!opt-len;
+	
+		self.fields<tot_len> = 20;
 		# TODO
 		# self.fields<checksum> = self.cal-checksum;
 		
@@ -70,14 +73,11 @@ class inet4 is BaseClass::Structure does BaseClass::Serializable is export {
 		self.wrap-up;
 
 		my $data = self.serialize.get-CArray;
-		my $header = RawSocket::iphdr.new;
-
-		$header.clone-fields(self.fields);
-
 		my int $sd = socket(SockConst::Domain.AF_INET, SockConst::Type.SOCK_RAW, SockConst::Protocol.IPPROTO_RAW);
 
+		say "Total Bytes of IP packet: " ~ $data.elems;
 
-		my $result = send_inet4($sd, $header, $data, $data.elems, 1);
+		my $result = send_inet4($sd, $data, $data.elems, 1);
 		say "Result: $result";
 		
 	}

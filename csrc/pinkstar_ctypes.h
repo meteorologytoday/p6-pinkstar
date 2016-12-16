@@ -1,5 +1,7 @@
 
 typedef uint8_t         P6CHAR;
+typedef uint8_t         P6UINT8;
+typedef int8_t          P6INT8;
 
 typedef uint32_t        P6UINT32;
 typedef int32_t         P6INT32;
