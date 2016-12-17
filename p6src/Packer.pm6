@@ -81,8 +81,8 @@ class NetPacker8 is Array is export {
 		self;
 	}
 
-	method get-CArray returns CArray[uint32] {
-		my @arr := CArray[uint32].new;
+	method get-CArray returns CArray[uint8] {
+		my @arr := CArray[uint8].new;
 		for 0..(self.elems - 1) {
 			@arr[$_] = self[$_];
 		}

@@ -1,39 +1,18 @@
-#include<errno.h>
-#include<stdio.h>
-#include<stdlib.h>
-#include<sys/socket.h>
-#include<netinet/in.h>
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <asm/byteorder.h>
 #include "pinkstar_ctypes.h"
-#include<netinet/ip.h>    //Provides declarations for ip header
+#include <netinet/ip.h>      // ip header definition
+
 
 /* Info about sock_raw please refer to : man 7 RAW */
 
-
 extern "C" { // prevent from c++ name mangling
-
-//typedef struct iphdr p6_iphdr;
-/*
-struct p6_iphdr {
-	P6UINT32 version;
-  	P6UINT32 ihl;
-	P6UINT32 tos;
-	P6UINT32 tot_len;
-	P6UINT32 id;
-	P6UINT32 frag_off;
-	P6UINT32 ttl;
-	P6UINT32 protocol;
-	P6UINT32 check;
-	P6UINT32 saddr;
-	P6UINT32 daddr;
-};
-*/
-
-struct iphdr& p6_allocate_iphdr() {
-	return *( (struct iphdr*) malloc(sizeof(struct iphdr)) );
-}
 
 P6INT32 p6_cbyteorder() {
 
@@ -47,54 +26,101 @@ P6INT32 p6_cbyteorder() {
 
 }
 
-void p6_setup_header_inet4(struct iphdr &hdr) {
-	
+void * addr2str(uint32_t addr, char * str) {
+	sprintf(str, "%d.%d.%d.%d", \
+		addr >> 24, \
+		(addr >> 16) & 0xFF,
+		(addr >>  8) & 0xFF,
+		addr & 0xFF);
+
+	return str;
+}
+
+void print_byte_sequence(uint8_t * p, size_t len) {
+	char hex[] = "0123456789ABCDEF";
+	for(size_t i = 0; i < len; ++i) {
+		uint8_t c = *(((uint8_t *)p) + i);
+		printf("%c%c ", hex[c >> 4], hex[c & 0xF]);
+		if(i % 16 == 0 && i != 0) {
+			printf("\n");
+		}
+	}
+
+	if(len % 16 != 0) {
+		printf("\n");
+	}
 }
 
 
-P6INT32 p6_send_inet4(P6INT32 sd, struct iphdr &hdr, P6CHAR *data, P6UINT32 c_len) {
+P6INT32 p6_send_inet4(P6INT32 sd, P6UINT8 * data, P6UINT32 c_len) {
+	struct iphdr hdr;
+	void * p = data;
+	char addr_str[64];
+
+	print_byte_sequence(data, c_len);
+
+	hdr.version = ( *((uint8_t *)p) >> 4 ) & 0xF;
+	hdr.ihl     = *((uint8_t *)p) & 0xF;
+
+	p = data + 1;
+	hdr.tos = *((uint8_t *)p);
+
+	p = data + 2;
+	hdr.tot_len = *((uint16_t *)p);
+
+	p = data + 4;
+	hdr.id = *((uint16_t *)p);
+
+	p = data + 8;
+	hdr.ttl = *((uint8_t *)p);
+
+	p = data + 9;
+	hdr.protocol = *((uint8_t *)p);
+
+	p = data + 10;
+	hdr.check = *((uint16_t *)p);
+
+	p = data + 12;
+	hdr.saddr = *((uint32_t *)p);
+
+	p = data + 16;
+	hdr.daddr = *((uint32_t *)p);
+
+	#ifdef DEBUG
+
+	print_byte_sequence((uint8_t *) &hdr, sizeof(hdr));
+
+
+	printf("version: %d\n", hdr.version);
+	printf("ihl: %d\n", hdr.ihl);
+	printf("tos: %d\n", hdr.tos);
+	printf("tot_len: %d\n", ntohs(hdr.tot_len));
+	printf("id: %d\n", ntohs(hdr.id));
+	printf("ttl: %d\n", hdr.ttl);
+	printf("protocol: %d\n", hdr.protocol);
+	printf("check: %d\n", ntohs(hdr.check));
+	printf("saddr: %s\n", addr2str(ntohl(hdr.saddr), addr_str));
+	printf("daddr: %s\n", addr2str(ntohl(hdr.daddr), addr_str));
+
+	#endif
 
 	struct sockaddr_in d_sin;
 	d_sin.sin_family = AF_INET;
 	d_sin.sin_port = 0;
 	d_sin.sin_addr.s_addr = hdr.daddr;
 
-	printf("hdr.tot_len = %d\n", hdr.tot_len);
+	printf("hdr.tot_len = %d\n", ntohs(hdr.tot_len));
 
 	errno = 0;
-	if(sendto(sd, data, hdr.tot_len, 0, (struct sockaddr *) &d_sin, sizeof(d_sin)) < 0) {
+	ssize_t sent_bytes = sendto(sd, data, htons(hdr.tot_len), 0, (struct sockaddr *) &d_sin, sizeof(d_sin));
+	if (sent_bytes < 0) {
 		perror("sendto\n");
 	} else {
-		printf("Packet sent. Length: %d bytes.\n", hdr.tot_len);
+		printf("Packet sent. Length: %d bytes.\n", sent_bytes);
 	}
 
-	return sd;
+	return (sent_bytes == -1) ? -1 : (P6INT32) sent_bytes ;
 }
-
-P6INT32 p6_send_test(P6INT32 sd, struct iphdr &hdr, P6CHAR *data, P6UINT32 c_len) {
-	printf("send_test\n");
-
-	struct sockaddr_in d_sin;
-	d_sin.sin_family = AF_INET;
-	d_sin.sin_port = 0;
-	d_sin.sin_addr.s_addr = 1;
-
-	printf("C size of header: %d\n", sizeof(hdr));
-	for(int i=0; i < sizeof(hdr) ; ++i) {
-		printf("%c - ", *((char *) (&hdr + i)) );
-	}
-	printf("\n");
-
-	errno = 0;
-	printf("This is a test\n");
-
-
-	return sd;
-}
-
-
-
-
 
 P6INT32 p6_socket(P6INT32 domain, P6INT32 type, P6INT32 protocol) {
 	printf("init errno: [%d]\n", errno);
