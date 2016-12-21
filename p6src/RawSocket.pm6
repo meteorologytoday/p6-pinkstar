@@ -3,7 +3,7 @@ unit module RawSocket;
 
 use NativeCall;
 
-constant libpath = "clib/p6rawsocket"; 
+constant libpath = "clib/pinkstar"; 
 
 class iphdr is repr('CStruct') is export {
 

@@ -30,7 +30,7 @@ lib%.so: %.cpp
 	$(CPP) $(CPPFLAGS) -o $(BINPATH)/$@ $<
 
 
-socketwrapper: libp6rawsocket.so p6rawsocket.out
+socketwrapper: libpinkstar.so pinkstar.out
 
 print_const: print_const.out
 	$(BINPATH)/$< > $(P6LIBPATH)/SockConst.pm
