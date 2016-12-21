@@ -228,4 +228,3 @@ unsigned short p6_csum(unsigned short *ptr,int nbytes) {
      
     return(answer);
 }
-}
