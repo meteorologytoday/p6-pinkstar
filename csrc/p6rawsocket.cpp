@@ -51,7 +51,6 @@ void print_byte_sequence(uint8_t * p, size_t len) {
 	}
 }
 
-
 P6INT32 p6_send_inet4(P6INT32 sd, P6UINT8 * data, P6UINT32 c_len) {
 	struct iphdr hdr;
 	void * p = data;
