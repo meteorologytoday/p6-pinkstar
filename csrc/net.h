@@ -19,6 +19,10 @@ void * addr2str(uint32_t addr, char * str) {
 }
 
 
+P6SSIZE_T p6_recv_inet4(P6INT32 sd, P6UINT8 * buf, P6SIZE_T buf_size) {
+	return recvfrom(sd, buf, buf_size, 0, NULL, NULL);
+}
+
 P6INT32 p6_send_inet4(P6INT32 sd, P6UINT8 * data, P6UINT32 c_len) {
 	struct iphdr hdr;
 	void * p = data;
