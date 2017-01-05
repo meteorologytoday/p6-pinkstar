@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <asm/byteorder.h>
 #include <netinet/ip.h>      // ip header definition
-
+#include <net/ethernet.h>
 
 #include "p6ctypes.h"
 
@@ -17,6 +17,3 @@ extern "C" {
 #include "checksums.h"
 }
 
-int main() {
-	return 0;
-}
