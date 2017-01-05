@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
 	class_head("Domain");
 	def("AF_INET", AF_INET);
 	def("PF_INET", PF_INET);
+	def("AF_PACKET", AF_PACKET);
 	class_tail();
 
 	class_head("Type");
@@ -34,6 +35,8 @@ int main(int argc, char **argv) {
 	class_head("Protocol");
 	def("IPPROTO_RAW", IPPROTO_RAW);	
 	def("IPPROTO_TCP", IPPROTO_TCP);	
+	def("ETH_P_ALL"  , htons(ETH_P_ALL));	
+	def("", IPPROTO_TCP);	
 	class_tail();
 
 	return 0;
